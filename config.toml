@@ -1,4 +1,4 @@
-baseurl = "https://gnmathur.github.io/"
+baseurl = "https://www.acchi.life/"
 title = "Acchi Life"
 theme = "hugo-coder"
 languagecode = "en"
@@ -11,17 +11,17 @@ style = "github-dark"
 
 [params]
   author = "Gaurav Mathur"
-  info = "Technology // Programming // And life in general... "
+  info = "Technology // Programming // And other interesting things"
   description = "Gaurav Mathur's personal website"
   keywords = "blog,developer,personal"
   avatarurl = "/img/avatar.jpeg"
-  #gravatar = "john.doe@example.com"
+  # gravatar = "[gaurav.mathur AT ymail.com]"
 
   faviconSVG = "/img/favicon.svg"
   favicon_32 = "/img/favicon-32x32.png"
   favicon_16 = "/img/favicon-16x16.png"
 
-  since = 2019
+  since = 2023
 
   enableTwemoji = true
 

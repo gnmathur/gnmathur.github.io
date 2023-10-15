@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Delete stale container · Acchi Life
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Gaurav Mathur">
+<meta name="description" content="Sample article showcasing basic Markdown syntax and formatting for HTML elements.">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Delete stale container"/>
+<meta name="twitter:description" content="Sample article showcasing basic Markdown syntax and formatting for HTML elements."/>
+
+<meta property="og:title" content="Delete stale container" />
+<meta property="og:description" content="Sample article showcasing basic Markdown syntax and formatting for HTML elements." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.acchi.life/posts/remove-stale-containers/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-07-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-07-13T00:00:00+00:00" />
+
+
+
+
+
+
+<link rel="canonical" href="https://www.acchi.life/posts/remove-stale-containers/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Acchi Life
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://www.acchi.life/posts/remove-stale-containers/">
+              Delete stale container
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-07-13T00:00:00Z">
+                July 13, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/recipes/">recipes</a>
+      <span class="separator">•</span>
+    <a href="/categories/docker/">docker</a></div>
+
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/docker/">docker</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>Oftentimes you want to remove the stopped or exited containers that you don&rsquo;t intend to start again. Here&rsquo;s a way to do this -</p>
+<pre tabindex="0"><code>$ docker rm `docker ps -a -q -f &quot;status=exited&quot;`
+</code></pre><p>For example,</p>
+<p><code>docker ps -a</code> gives you the list the following containers</p>
+<pre tabindex="0"><code>&gt; git:(main) docker ps -a
+5eca36be7c12   87689a8e1265    &quot;/__cacert_entrypoin…&quot;   7 hours ago    Exited (130) 7 hours ago              competent_torvalds                                                                             
+e1093949e6cb   bec30be74fb3    &quot;/__cacert_entrypoin…&quot;   7 hours ago    Exited (1) 7 hours ago                unruffled_wiles                                                                                
+8a0f435c8a5d   b686192cfc5f    &quot;/__cacert_entrypoin…&quot;   8 hours ago    Exited (130) 8 hours ago              keen_bardeen                                                                                   
+c047cfa3b253   saarekaam:0.1   &quot;/__cacert_entrypoin…&quot;   29 hours ago   Exited (137) 29 hours ago             tender_goldberg                                                                                
+80bd9088b788   19b6e73abb2b    &quot;/__cacert_entrypoin…&quot;   29 hours ago   Exited (137) 29 hours ago             eager_albattani                                                                                
+46a1d61011af   19b6e73abb2b    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (137) 31 hours ago             brave_fermat                                                                                   
+0d2c1071066e   f0fc0f94729e    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               beautiful_sammet                                                                               
+f60a7321ab32   2769272fbbc8    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               jovial_heisenberg                                                                              
+181aff5f575b   2769272fbbc8    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               focused_borg                                                                                   
+e13f55715c2b   2769272fbbc8    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               lucid_bartik                                                                                   
+581ef651d8ce   9e7ae85c6825    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               jolly_shaw                                                                                     
+a86927a05147   9e7ae85c6825    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               eager_carver                                                                                   
+f4c3784627f1   5a7c50d65bc7    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               xenodochial_keldysh                                                                            
+27926181cc78   5a7c50d65bc7    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               romantic_jennings                                                                              
+301348b8c935   83bc63193f8c    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               competent_cori                                                                                 
+f6143e6f8bc1   83bc63193f8c    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               funny_dijkstra                                                                                 
+6b1ddcfb15af   gnms:0.1        &quot;pypy3 main.py&quot;          3 weeks ago    Exited (0) 3 weeks ago                gnms                                                                                           
+e09de0c5d5a8   fcfdcd822485    &quot;--name gnms&quot;            3 weeks ago    Created                               dreamy_ramanujan                                                                               
+5971e11e121b   fcfdcd822485    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                focused_khayyam                                                                                
+43883ac4b298   fcfdcd822485    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                heuristic_mirzakhani                                                                           
+3aa5b7c8fa31   4ecbcedae7d3    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                magical_liskov                                                                                 
+cb4770e494e9   4ecbcedae7d3    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                stoic_zhukovsky                                                                                
+e221d6a047e0   bbe5f44bd0ca    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                exciting_saha                                                                                  
+311e875a18c8   09c069097d92    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                practical_dubinsky                                                                             
+f03a192b7863   657ddfb7361a    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                peaceful_jepsen                                                                                
+4d553ecee119   8a7a7c872a4b    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                interesting_lalande                                                                            
+82589ec89861   8a7a7c872a4b    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                vigilant_mayer                                                                                 
+08eee73971f2   09db4d71eae6    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                magical_cannon                                                                                 
+83c108a3b72c   0a31c16014a1    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                fervent_goldstine 
+</code></pre><p>Run the command to remove the &ldquo;stale&rdquo; containers</p>
+<pre tabindex="0"><code>&gt; git:(main) docker rm `docker ps -a -q -f &quot;status=exited&quot;`
+5eca36be7c12
+e1093949e6cb
+8a0f435c8a5d
+c047cfa3b253
+80bd9088b788
+46a1d61011af
+0d2c1071066e
+f60a7321ab32
+181aff5f575b
+e13f55715c2b
+581ef651d8ce
+a86927a05147
+f4c3784627f1
+27926181cc78
+301348b8c935
+f6143e6f8bc1
+6b1ddcfb15af
+5971e11e121b
+43883ac4b298
+3aa5b7c8fa31
+cb4770e494e9
+e221d6a047e0
+311e875a18c8
+f03a192b7863
+4d553ecee119
+82589ec89861
+08eee73971f2
+83c108a3b72c
+</code></pre><p>And now, when you list the containers, you&rsquo;ll notice that the exited ones are cleaned up!</p>
+<pre tabindex="0"><code>&gt; git:(main) docker ps -a
+CONTAINER ID   IMAGE          COMMAND         CREATED       STATUS    PORTS     NAMES
+e09de0c5d5a8   fcfdcd822485   &quot;--name gnms&quot;   3 weeks ago   Created             dreamy_ramanujan
+</code></pre>
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+  
+</section>
+
+
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2023
+     Gaurav Mathur 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

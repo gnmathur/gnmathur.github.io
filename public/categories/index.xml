@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Acchi Life</title>
-    <link>https://gnmathur.github.io/categories/</link>
+    <link>https://www.acchi.life/categories/</link>
     <description>Recent content in Categories on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 13 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://gnmathur.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>syntax</title>
-      <link>https://gnmathur.github.io/categories/syntax/</link>
+      <title>docker</title>
+      <link>https://www.acchi.life/categories/docker/</link>
       <pubDate>Thu, 13 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://gnmathur.github.io/categories/syntax/</guid>
+      <guid>https://www.acchi.life/categories/docker/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>theme demo</title>
-      <link>https://gnmathur.github.io/categories/theme-demo/</link>
+      <title>recipes</title>
+      <link>https://www.acchi.life/categories/recipes/</link>
       <pubDate>Thu, 13 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://gnmathur.github.io/categories/theme-demo/</guid>
+      <guid>https://www.acchi.life/categories/recipes/</guid>
       <description></description>
     </item>
     

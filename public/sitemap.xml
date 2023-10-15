@@ -2,55 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gnmathur.github.io/</loc>
+    <loc>https://www.acchi.life/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/authors/</loc>
+    <loc>https://www.acchi.life/categories/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/categories/</loc>
+    <loc>https://www.acchi.life/posts/remove-stale-containers/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/tags/css/</loc>
+    <loc>https://www.acchi.life/tags/docker/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/tags/html/</loc>
+    <loc>https://www.acchi.life/series/docker/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/tags/hugo/</loc>
+    <loc>https://www.acchi.life/categories/docker/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/authors/lone-coder/</loc>
+    <loc>https://www.acchi.life/posts/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/tags/markdown/</loc>
+    <loc>https://www.acchi.life/categories/recipes/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/posts/launched/</loc>
+    <loc>https://www.acchi.life/series/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/posts/</loc>
+    <loc>https://www.acchi.life/tags/</loc>
     <lastmod>2023-07-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gnmathur.github.io/series/</loc>
-    <lastmod>2023-07-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://gnmathur.github.io/categories/syntax/</loc>
-    <lastmod>2023-07-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://gnmathur.github.io/tags/</loc>
-    <lastmod>2023-07-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://gnmathur.github.io/series/theme-demo/</loc>
-    <lastmod>2023-07-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://gnmathur.github.io/categories/theme-demo/</loc>
-    <lastmod>2023-07-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://gnmathur.github.io/posts/rich-content/</loc>
-    <lastmod>2023-07-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://gnmathur.github.io/tags/shortcodes/</loc>
-    <lastmod>2023-07-12T00:00:00+00:00</lastmod>
+    <loc>https://www.acchi.life/authors/</loc>
   </url>
 </urlset>
