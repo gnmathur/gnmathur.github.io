@@ -6,17 +6,15 @@ defaultcontentlanguage = "en"
 
 paginate = 20
 
-disqusShortname = "yourdiscussshortname"
-
 [markup.highlight]
 style = "github-dark"
 
 [params]
   author = "Gaurav Mathur"
-  info = "Technologist and all around good egg!"
+  info = "Technology // Programming // And life in general... "
   description = "Gaurav Mathur's personal website"
   keywords = "blog,developer,personal"
-  avatarurl = "images/avatar.jpg"
+  avatarurl = "/img/avatar.jpeg"
   #gravatar = "john.doe@example.com"
 
   faviconSVG = "/img/favicon.svg"
@@ -45,17 +43,13 @@ style = "github-dark"
   name = "Github"
   icon = "fa fa-github fa-2x"
   weight = 1
-  url = "https://github.com/johndoe/"
+  url = "https://github.com/gnmathur/"
+
 [[params.social]]
-  name = "Gitlab"
-  icon = "fa fa-gitlab fa-2x"
-  weight = 2
-  url = "https://gitlab.com/johndoe/"
-[[params.social]]
-  name = "Twitter"
-  icon = "fa fa-twitter fa-2x"
+  name = "LinkedIn"
+  icon = "fa fa-linkedin fa-2x"
   weight = 3
-  url = "https://twitter.com/johndoe/"
+  url = "https://www.linkedin.com/in/gnmathur/"
 
 # Menu links
 [[menu.main]]
