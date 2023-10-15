@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Acchi Life</title>
-    <link>https://gnmathur.github.io/</link>
-    <description>Recent content on Acchi Life</description>
+    <title>css on Acchi Life</title>
+    <link>https://gnmathur.github.io/tags/css/</link>
+    <description>Recent content in css on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 13 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://gnmathur.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://gnmathur.github.io/tags/css/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Markdown Syntax Guide</title>
       <link>https://gnmathur.github.io/posts/launched/</link>
