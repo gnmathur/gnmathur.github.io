@@ -6,15 +6,5 @@
     <description>Recent content on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language><atom:link href="https://www.acchi.life/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title></title>
-      <link>https://www.acchi.life/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.acchi.life/about/</guid>
-      <description>Hello, I&amp;rsquo;m Gaurav Mathur. I&amp;rsquo;m a software engineer based in the San Francisco Bay Area. This platform serves as a space where I share insights on programming and software systems. Occasionally, I&amp;rsquo;ll delve into other topics that pique my interest.
-On the name &amp;ldquo;Acchi Life&amp;rdquo;: In Hindi, &amp;ldquo;Acchi&amp;rdquo; means &amp;ldquo;Good&amp;rdquo;. It&amp;rsquo;s a nod to the blessings I&amp;rsquo;ve received in life, a sentiment I hope resonates in my writings 🙂</description>
-    </item>
-    
   </channel>
 </rss>
