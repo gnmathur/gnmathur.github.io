@@ -1,6 +1,6 @@
 +++
-title = "Delete stale container"
-date = "2023-07-13"
+title = "Deleting a stale container"
+date = "2023-11-15"
 description = "Sample article showcasing basic Markdown syntax and formatting for HTML elements."
 tags = [
     "docker",
