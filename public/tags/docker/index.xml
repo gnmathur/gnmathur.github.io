@@ -6,17 +6,14 @@
     <description>Recent content in docker on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 13 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 10 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Delete stale container</title>
+      <title>Deleting stale containers</title>
       <link>https://www.acchi.life/posts/remove-stale-containers/</link>
-      <pubDate>Thu, 13 Jul 2023 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
       
       <guid>https://www.acchi.life/posts/remove-stale-containers/</guid>
-      <description>Oftentimes you want to remove the stopped or exited containers that you don&amp;rsquo;t intend to start again. Here&amp;rsquo;s a way to do this -
-$ docker rm `docker ps -a -q -f &amp;quot;status=exited&amp;quot;` For example,
-docker ps -a gives you the list the following containers
-&amp;gt; git:(main) docker ps -a 5eca36be7c12 87689a8e1265 &amp;quot;/__cacert_entrypoin…&amp;quot; 7 hours ago Exited (130) 7 hours ago competent_torvalds e1093949e6cb bec30be74fb3 &amp;quot;/__cacert_entrypoin…&amp;quot; 7 hours ago Exited (1) 7 hours ago unruffled_wiles 8a0f435c8a5d b686192cfc5f &amp;quot;/__cacert_entrypoin…&amp;quot; 8 hours ago Exited (130) 8 hours ago keen_bardeen c047cfa3b253 saarekaam:0.</description>
+      <description>&lt;p&gt;Oftentimes you want to remove the stopped or exited containers that you don&amp;rsquo;t intend to start again. Here&amp;rsquo;s a way to do this -&lt;/p&gt;</description>
     </item>
     
   </channel>

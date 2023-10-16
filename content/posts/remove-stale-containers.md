@@ -1,19 +1,24 @@
 +++
-title = "Deleting a stale container"
-date = "2023-11-15"
-description = "Sample article showcasing basic Markdown syntax and formatting for HTML elements."
+authors = ["Gaurav Mathur"]
+title = "Deleting stale containers"
+date = "2023-10-10"
+description = "Deleting stale containers"
 tags = [
     "docker",
+    "recipes",
 ]
 categories = [
-    "recipes",
     "docker",
+    "recipes",
 ]
-series = ["docker"]
-draft = false
+series = ["Docker"]
 +++
 
 Oftentimes you want to remove the stopped or exited containers that you don't intend to start again. Here's a way to do this -
+
+<!--more-->
+
+Here's how to do it...
 
 ```
 $ docker rm `docker ps -a -q -f "status=exited"`
