@@ -14,7 +14,7 @@ categories = [
 series = ["Docker"]
 +++
 
-Oftentimes you want to remove the stopped or exited containers that you don't intend to start again. Here's a way to do this -
+Oftentimes you want to remove the stopped or exited containers that you don't intend to start again.
 
 <!--more-->
 
