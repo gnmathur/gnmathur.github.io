@@ -8,21 +8,21 @@
     <language>en</language>
     <lastBuildDate>Mon, 23 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/series/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Triggering a custom callback on excessive GC activity</title>
+      <title>Triggering a custom callback on excessive GC activity in Java</title>
       <link>https://www.acchi.life/posts/excess-gc-trigger/</link>
       <pubDate>Mon, 23 Oct 2023 00:00:00 +0000</pubDate>
       
       <guid>https://www.acchi.life/posts/excess-gc-trigger/</guid>
-      <description>&lt;p&gt;We might want to invoke some business logic when there is excessive GC activity in your program. The code snippet below shows one way
+      <description>&lt;p&gt;We might want to invoke some business logic when there is excessive GC activity in out program. The code snippet below shows one way
 of doing that. It defines a &lt;code&gt;GCAnalyzer&lt;/code&gt; class that takes the following key parameters -&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;cycles&lt;/code&gt; - The number of consecutive GC cycles that we want to track continously&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;trackedCycles&lt;/code&gt; - The number of consecutive GC cycles that we want to track continously&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;percentThreshold&lt;/code&gt; - If the time take in GC activity exceeds the wall time by this percentage, call the callback&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;callback&lt;/code&gt; - User supplied callback invoked when the threshold is exceeded&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thresholdExceededCb&lt;/code&gt; - User supplied callback invoked when the threshold is exceeded&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;This code track GC activity, regardless of either the GC type of GC generation type. It could be easily tweaked to, say, only track time taken by
-consequitive STW (Stop-The-World) cycles, or consecutive full GC cycles.&lt;/p&gt;
-&lt;p&gt;It works by keeping track of the GC times in the last &lt;code&gt;cycle&lt;/code&gt; cycles, and also the total time spent from the start of the first cycle, to the
+&lt;p&gt;This code tracks GC activity, regardless of either the GC algorithm or GC type for the algorithm. It could be easily tweaked to, say, only track time taken by
+consecutive STW (Stop-The-World) cycles, or consecutive full GC cycles.&lt;/p&gt;
+&lt;p&gt;It works by keeping track of the GC times in the last &lt;code&gt;trackedCycles&lt;/code&gt; cycles, and the total time spent from the start of the first cycle, to the
 end of the last one.&lt;/p&gt;</description>
     </item>
     

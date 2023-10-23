@@ -3,7 +3,7 @@
 
 <head>
   <title>
-  Triggering a custom callback on excessive GC activity · Acchi Life
+  Triggering a custom callback on excessive GC activity in Java · Acchi Life
 </title>
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +17,10 @@
 <meta name="keywords" content="blog,developer,personal">
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Triggering a custom callback on excessive GC activity"/>
+<meta name="twitter:title" content="Triggering a custom callback on excessive GC activity in Java"/>
 <meta name="twitter:description" content="Tiggering a custom callback on excessive GC activity"/>
 
-<meta property="og:title" content="Triggering a custom callback on excessive GC activity" />
+<meta property="og:title" content="Triggering a custom callback on excessive GC activity in Java" />
 <meta property="og:description" content="Tiggering a custom callback on excessive GC activity" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.acchi.life/posts/excess-gc-trigger/" /><meta property="article:section" content="posts" />
@@ -132,7 +132,7 @@
         <div class="post-title">
           <h1 class="title">
             <a class="title-link" href="https://www.acchi.life/posts/excess-gc-trigger/">
-              Triggering a custom callback on excessive GC activity
+              Triggering a custom callback on excessive GC activity in Java
             </a>
           </h1>
         </div>
@@ -182,94 +182,121 @@
 
       <div class="post-content">
         
-        <p>We might want to invoke some business logic when there is excessive GC activity in your program. The code snippet below shows one way
+        <p>We might want to invoke some business logic when there is excessive GC activity in out program. The code snippet below shows one way
 of doing that. It defines a <code>GCAnalyzer</code> class that takes the following key parameters -</p>
 <ul>
-<li><code>cycles</code> - The number of consecutive GC cycles that we want to track continously</li>
+<li><code>trackedCycles</code> - The number of consecutive GC cycles that we want to track continously</li>
 <li><code>percentThreshold</code> - If the time take in GC activity exceeds the wall time by this percentage, call the callback</li>
-<li><code>callback</code> - User supplied callback invoked when the threshold is exceeded</li>
+<li><code>thresholdExceededCb</code> - User supplied callback invoked when the threshold is exceeded</li>
 </ul>
-<p>This code track GC activity, regardless of either the GC type of GC generation type. It could be easily tweaked to, say, only track time taken by
-consequitive STW (Stop-The-World) cycles, or consecutive full GC cycles.</p>
-<p>It works by keeping track of the GC times in the last <code>cycle</code> cycles, and also the total time spent from the start of the first cycle, to the
+<p>This code tracks GC activity, regardless of either the GC algorithm or GC type for the algorithm. It could be easily tweaked to, say, only track time taken by
+consecutive STW (Stop-The-World) cycles, or consecutive full GC cycles.</p>
+<p>It works by keeping track of the GC times in the last <code>trackedCycles</code> cycles, and the total time spent from the start of the first cycle, to the
 end of the last one.</p>
-<pre tabindex="0"><code>import javax.management.Notification;
-import javax.management.NotificationEmitter;
-import javax.management.openmbean.CompositeData;
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
+<span style="color:#fff;font-weight:bold">import</span> com.sun.management.GarbageCollectionNotificationInfo;
 
-public class GCAnalyzer {
-    private List&lt;GarbageCollectorMXBean&gt; gcBean;
-    private List&lt;Long&gt; durations = new ArrayList&lt;&gt;();
-    private List&lt;Long&gt; startTimes = new ArrayList&lt;&gt;();
-    // Number of consecutive GC cycles to keep track of
-    private int cycles = 0;
-    // Percentage of time spent in GC over the  cycles to trigger the callback function
-    private double percentThreshold = 0.0;
-    // Callback function to call when the percentage threshold is exceeded
-    private Consumer&lt;Double&gt; callback;
+<span style="color:#fff;font-weight:bold">import</span> javax.management.Notification;
+<span style="color:#fff;font-weight:bold">import</span> javax.management.NotificationEmitter;
+<span style="color:#fff;font-weight:bold">import</span> javax.management.openmbean.CompositeData;
+<span style="color:#fff;font-weight:bold">import</span> java.lang.management.GarbageCollectorMXBean;
+<span style="color:#fff;font-weight:bold">import</span> java.lang.management.ManagementFactory;
+<span style="color:#fff;font-weight:bold">import</span> java.util.LinkedList;
+<span style="color:#fff;font-weight:bold">import</span> java.util.List;
+<span style="color:#fff;font-weight:bold">import</span> java.util.function.Consumer;
 
-    private final class NotificationListener implements javax.management.NotificationListener {
+<span style="color:#007f7f">/**
+</span><span style="color:#007f7f"> * GCAnalyzer monitors garbage collection activities and invokes a callback function
+</span><span style="color:#007f7f"> * when the percentage of time spent in garbage collection, over a specified number
+</span><span style="color:#007f7f"> * of consecutive cycles exceeds a given threshold.
+</span><span style="color:#007f7f"> */</span>
+<span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">class</span> GCAnalyzer {
+    <span style="color:#fff;font-weight:bold">private</span> List&lt;GarbageCollectorMXBean&gt; gcBeans;
+    <span style="color:#fff;font-weight:bold">private</span> LinkedList&lt;Long&gt; durations = <span style="color:#fff;font-weight:bold">new</span> LinkedList&lt;&gt;();
+    <span style="color:#fff;font-weight:bold">private</span> LinkedList&lt;Long&gt; startTimes = <span style="color:#fff;font-weight:bold">new</span> LinkedList&lt;&gt;();
+    <span style="color:#007f7f">// Number of consecutive GC cycles to keep track of
+</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">int</span> trackedCycles = 0;
+    <span style="color:#007f7f">// Percentage of time spent in GC over the  cycles to trigger the callback function
+</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">double</span> percentThreshold = 0.<span style="color:#007f7f">0</span>;
+    <span style="color:#007f7f">// Callback function to call when the percentage threshold is exceeded
+</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">private</span> Consumer&lt;Double&gt; thresholdExceededCb;
+
+    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">final</span> <span style="color:#fff;font-weight:bold">class</span> GCNotificationListener <span style="color:#fff;font-weight:bold">implements</span> javax.<span style="color:#007f7f">management</span>.<span style="color:#007f7f">NotificationListener</span> {
+        <span style="color:#007f7f">/**
+</span><span style="color:#007f7f">         * Calculates the percentage of time spent in garbage collection relative to total elapsed time.
+</span><span style="color:#007f7f">         *
+</span><span style="color:#007f7f">         * @param currentEndTime The end time of the current GC cycle.
+</span><span style="color:#007f7f">         * @return The percentage of time spent in GC.
+</span><span style="color:#007f7f">         */</span>
+        <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">double</span> calculateGcPercent(<span style="color:#fff;font-weight:bold">long</span> currentEndTime) {
+            <span style="color:#fff;font-weight:bold">long</span> totalDuration = durations.<span style="color:#007f7f">stream</span>().<span style="color:#007f7f">mapToLong</span>(Long::longValue).<span style="color:#007f7f">sum</span>();
+            <span style="color:#fff;font-weight:bold">return</span> (<span style="color:#fff;font-weight:bold">double</span>) totalDuration / (currentEndTime - startTimes.<span style="color:#007f7f">getFirst</span>()) * 100.<span style="color:#007f7f">0</span>;
+        }
+
         @Override
-        public void handleNotification(Notification notification, Object handback) {
-            if (notification.getType().equals(GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION)) {
-                GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
+        <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">void</span> handleNotification(Notification notification, Object handback) {
+            <span style="color:#fff;font-weight:bold">if</span> (notification.<span style="color:#007f7f">getType</span>().<span style="color:#007f7f">equals</span>(GarbageCollectionNotificationInfo.<span style="color:#007f7f">GARBAGE_COLLECTION_NOTIFICATION</span>)) {
+                GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.<span style="color:#007f7f">from</span>((CompositeData) notification.<span style="color:#007f7f">getUserData</span>());
+                <span style="color:#fff;font-weight:bold">long</span> duration = info.<span style="color:#007f7f">getGcInfo</span>().<span style="color:#007f7f">getDuration</span>();
+                <span style="color:#fff;font-weight:bold">long</span> startTime = info.<span style="color:#007f7f">getGcInfo</span>().<span style="color:#007f7f">getStartTime</span>();
+                <span style="color:#fff;font-weight:bold">long</span> endTime = info.<span style="color:#007f7f">getGcInfo</span>().<span style="color:#007f7f">getEndTime</span>();
 
-                long duration = info.getGcInfo().getDuration();
-
-                if (durations.size() == cycles) {
-                    // Get the start time of the first GC in the list
-                    long startTime = startTimes.get(0);
-                    // Get the end time of the last GC in the list
-                    long endTime = info.getGcInfo().getEndTime();
-                    // Sum up the durations of all GCs in the list
-                    long totalDuration = durations.stream().reduce(0L, Long::sum);
-                    // Calculate the percentage of time spent in GC
-                    double percent = (double) totalDuration / (endTime - startTime) * 100.0;
-                    // If the percentage is greater than the threshold, call the callback
-                    if (percent &gt; percentThreshold) {
-                        callback.accept(percent);
+                <span style="color:#fff;font-weight:bold">if</span> (durations.<span style="color:#007f7f">size</span>() == trackedCycles) {
+                    <span style="color:#fff;font-weight:bold">double</span> percent = calculateGcPercent(endTime);
+                    <span style="color:#fff;font-weight:bold">if</span> (percent &gt; percentThreshold) {
+                        thresholdExceededCb.<span style="color:#007f7f">accept</span>(percent);
                     }
 
-                    // remove the first element from the list
-                    durations.remove(0);
-                    startTimes.remove(0);
+                    durations.<span style="color:#007f7f">removeFirst</span>();
+                    startTimes.<span style="color:#007f7f">removeFirst</span>();
                 }
-                durations.add(duration);
-                startTimes.add(info.getGcInfo().getStartTime());
-            }
 
+                durations.<span style="color:#007f7f">add</span>(duration);
+                startTimes.<span style="color:#007f7f">add</span>(startTime);
+            }
         }
     }
 
-    public GCAnalyzer(int cycles, double percentThreshold, Consumer&lt;Double&gt; callback) {
-        this.gcBean = ManagementFactory.getGarbageCollectorMXBeans();
-        this.cycles = cycles;
-        this.percentThreshold = percentThreshold;
-        this.callback = callback;
-
-        for (GarbageCollectorMXBean bean : gcBean) {
-            if (bean instanceof NotificationEmitter) {
+    <span style="color:#007f7f">/**
+</span><span style="color:#007f7f">     * Registers the GCNotificationListener to all available GarbageCollectorMXBeans.
+</span><span style="color:#007f7f">     */</span>
+    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">void</span> registerGCNotificationListeners() {
+        <span style="color:#fff;font-weight:bold">for</span> (GarbageCollectorMXBean bean : gcBeans) {
+            <span style="color:#fff;font-weight:bold">if</span> (bean <span style="color:#fff;font-weight:bold">instanceof</span> NotificationEmitter) {
                 NotificationEmitter emitter = (NotificationEmitter) bean;
-                emitter.addNotificationListener(new NotificationListener(), null, null);
+                emitter.<span style="color:#007f7f">addNotificationListener</span>(<span style="color:#fff;font-weight:bold">new</span> GCNotificationListener(), <span style="color:#fff;font-weight:bold">null</span>, <span style="color:#fff;font-weight:bold">null</span>);
             }
         }
+    }
+
+    <span style="color:#007f7f">/**
+</span><span style="color:#007f7f">     * Constructs a GCAnalyzer instance.
+</span><span style="color:#007f7f">     *
+</span><span style="color:#007f7f">     * @param trackedCycles The number of consecutive GC cycles to monitor.
+</span><span style="color:#007f7f">     * @param percentThreshold The threshold of GC activity as a percentage of total time.
+</span><span style="color:#007f7f">     * @param thresholdExceededCb A callback function to invoke when the threshold is exceeded.
+</span><span style="color:#007f7f">     */</span>
+    <span style="color:#fff;font-weight:bold">public</span> GCAnalyzer(<span style="color:#fff;font-weight:bold">int</span> trackedCycles, <span style="color:#fff;font-weight:bold">double</span> percentThreshold, Consumer&lt;Double&gt; thresholdExceededCb) {
+        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">gcBeans</span> = ManagementFactory.<span style="color:#007f7f">getGarbageCollectorMXBeans</span>();
+        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">trackedCycles</span> = trackedCycles;
+        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">percentThreshold</span> = percentThreshold;
+        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">thresholdExceededCb</span> = thresholdExceededCb;
+
+        registerGCNotificationListeners();
     }
 }
-</code></pre><p>It could be called from main like this -</p>
-<pre tabindex="0"><code>   public static void main(String[] args) {
-        ...
-        new GCAnalyzer(6,
-                0.1,
-                timeSpentInGcInPercent -&gt; System.out.printf(&quot;GC Threshold exceeded: %.2f\n&quot;, timeSpentInGcInPercent)
+</code></pre></div><p>It could be called from main like this -</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">   <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span> main(String[] args) {
+       ...
+        <span style="color:#fff;font-weight:bold">new</span> GCAnalyzer(6,
+            70,
+            timeSpentInGcInPercent -&gt; System.<span style="color:#007f7f">out</span>.<span style="color:#007f7f">printf</span>(<span style="color:#0ff;font-weight:bold">&#34;GC Threshold exceeded: %.2f\n&#34;</span>, timeSpentInGcInPercent)
         );
-        ...
-    }
-</code></pre>
+       ...
+   }
+</code></pre></div><p>In the example above, the registered callback, which prints out the threshold exceeded message, is called when the program spends more than 70% of clock
+time in GC activity over the 6 previous GC cycles. Note, the the <code>GCAnalyzer</code> implementation is agnostic of the GC type. The program could be easily modified
+to filter on specific GC type (e.g. only <code>G1 Young Gen</code> etc.)</p>
       </div>
 
 

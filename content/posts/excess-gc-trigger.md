@@ -1,6 +1,6 @@
 +++
 authors = ["Gaurav Mathur"]
-title = "Triggering a custom callback on excessive GC activity"
+title = "Triggering a custom callback on excessive GC activity in Java"
 date = "2023-10-23"
 description = "Tiggering a custom callback on excessive GC activity"
 tags = [
@@ -16,100 +16,130 @@ categories = [
 series = ["Java"]
 +++
 
-We might want to invoke some business logic when there is excessive GC activity in your program. The code snippet below shows one way 
+We might want to invoke some business logic when there is excessive GC activity in out program. The code snippet below shows one way 
 of doing that. It defines a `GCAnalyzer` class that takes the following key parameters - 
 
-* `cycles` - The number of consecutive GC cycles that we want to track continously
+* `trackedCycles` - The number of consecutive GC cycles that we want to track continously
 * `percentThreshold` - If the time take in GC activity exceeds the wall time by this percentage, call the callback
-* `callback` - User supplied callback invoked when the threshold is exceeded
+* `thresholdExceededCb` - User supplied callback invoked when the threshold is exceeded
 
-This code track GC activity, regardless of either the GC type of GC generation type. It could be easily tweaked to, say, only track time taken by 
-consequitive STW (Stop-The-World) cycles, or consecutive full GC cycles.
+This code tracks GC activity, regardless of either the GC algorithm or GC type for the algorithm. It could be easily tweaked to, say, only track time taken by 
+consecutive STW (Stop-The-World) cycles, or consecutive full GC cycles.
 
-It works by keeping track of the GC times in the last `cycle` cycles, and also the total time spent from the start of the first cycle, to the 
+It works by keeping track of the GC times in the last `trackedCycles` cycles, and the total time spent from the start of the first cycle, to the 
 end of the last one.
 
 <!--more-->
+```java
 
-```
+import com.sun.management.GarbageCollectionNotificationInfo;
+
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
 import javax.management.openmbean.CompositeData;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * GCAnalyzer monitors garbage collection activities and invokes a callback function
+ * when the percentage of time spent in garbage collection, over a specified number
+ * of consecutive cycles exceeds a given threshold.
+ */
 public class GCAnalyzer {
-    private List<GarbageCollectorMXBean> gcBean;
-    private List<Long> durations = new ArrayList<>();
-    private List<Long> startTimes = new ArrayList<>();
+    private List<GarbageCollectorMXBean> gcBeans;
+    private LinkedList<Long> durations = new LinkedList<>();
+    private LinkedList<Long> startTimes = new LinkedList<>();
     // Number of consecutive GC cycles to keep track of
-    private int cycles = 0;
+    private int trackedCycles = 0;
     // Percentage of time spent in GC over the  cycles to trigger the callback function
     private double percentThreshold = 0.0;
     // Callback function to call when the percentage threshold is exceeded
-    private Consumer<Double> callback;
+    private Consumer<Double> thresholdExceededCb;
 
-    private final class NotificationListener implements javax.management.NotificationListener {
+    private final class GCNotificationListener implements javax.management.NotificationListener {
+        /**
+         * Calculates the percentage of time spent in garbage collection relative to total elapsed time.
+         *
+         * @param currentEndTime The end time of the current GC cycle.
+         * @return The percentage of time spent in GC.
+         */
+        private double calculateGcPercent(long currentEndTime) {
+            long totalDuration = durations.stream().mapToLong(Long::longValue).sum();
+            return (double) totalDuration / (currentEndTime - startTimes.getFirst()) * 100.0;
+        }
+
         @Override
         public void handleNotification(Notification notification, Object handback) {
             if (notification.getType().equals(GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION)) {
                 GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
-
                 long duration = info.getGcInfo().getDuration();
+                long startTime = info.getGcInfo().getStartTime();
+                long endTime = info.getGcInfo().getEndTime();
 
-                if (durations.size() == cycles) {
-                    // Get the start time of the first GC in the list
-                    long startTime = startTimes.get(0);
-                    // Get the end time of the last GC in the list
-                    long endTime = info.getGcInfo().getEndTime();
-                    // Sum up the durations of all GCs in the list
-                    long totalDuration = durations.stream().reduce(0L, Long::sum);
-                    // Calculate the percentage of time spent in GC
-                    double percent = (double) totalDuration / (endTime - startTime) * 100.0;
-                    // If the percentage is greater than the threshold, call the callback
+                if (durations.size() == trackedCycles) {
+                    double percent = calculateGcPercent(endTime);
                     if (percent > percentThreshold) {
-                        callback.accept(percent);
+                        thresholdExceededCb.accept(percent);
                     }
 
-                    // remove the first element from the list
-                    durations.remove(0);
-                    startTimes.remove(0);
+                    durations.removeFirst();
+                    startTimes.removeFirst();
                 }
-                durations.add(duration);
-                startTimes.add(info.getGcInfo().getStartTime());
-            }
 
+                durations.add(duration);
+                startTimes.add(startTime);
+            }
         }
     }
 
-    public GCAnalyzer(int cycles, double percentThreshold, Consumer<Double> callback) {
-        this.gcBean = ManagementFactory.getGarbageCollectorMXBeans();
-        this.cycles = cycles;
-        this.percentThreshold = percentThreshold;
-        this.callback = callback;
-
-        for (GarbageCollectorMXBean bean : gcBean) {
+    /**
+     * Registers the GCNotificationListener to all available GarbageCollectorMXBeans.
+     */
+    private void registerGCNotificationListeners() {
+        for (GarbageCollectorMXBean bean : gcBeans) {
             if (bean instanceof NotificationEmitter) {
                 NotificationEmitter emitter = (NotificationEmitter) bean;
-                emitter.addNotificationListener(new NotificationListener(), null, null);
+                emitter.addNotificationListener(new GCNotificationListener(), null, null);
             }
         }
+    }
+
+    /**
+     * Constructs a GCAnalyzer instance.
+     *
+     * @param trackedCycles The number of consecutive GC cycles to monitor.
+     * @param percentThreshold The threshold of GC activity as a percentage of total time.
+     * @param thresholdExceededCb A callback function to invoke when the threshold is exceeded.
+     */
+    public GCAnalyzer(int trackedCycles, double percentThreshold, Consumer<Double> thresholdExceededCb) {
+        this.gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+        this.trackedCycles = trackedCycles;
+        this.percentThreshold = percentThreshold;
+        this.thresholdExceededCb = thresholdExceededCb;
+
+        registerGCNotificationListeners();
     }
 }
 ```
 
 It could be called from main like this - 
 
-```
+```java
    public static void main(String[] args) {
-        ...
+       ...
         new GCAnalyzer(6,
-                0.1,
-                timeSpentInGcInPercent -> System.out.printf("GC Threshold exceeded: %.2f\n", timeSpentInGcInPercent)
+            70,
+            timeSpentInGcInPercent -> System.out.printf("GC Threshold exceeded: %.2f\n", timeSpentInGcInPercent)
         );
-        ...
-    }
+       ...
+   }
 ```
+
+In the example above, the registered callback, which prints out the threshold exceeded message, is called when the program spends more than 70% of clock
+time in GC activity over the 6 previous GC cycles. Note, the the `GCAnalyzer` implementation is agnostic of the GC type. The program could be easily modified
+to filter on specific GC type (e.g. only `G1 Young Gen` etc.)
+
+
