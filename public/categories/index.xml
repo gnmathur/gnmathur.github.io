@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 10 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gc</title>
+      <link>https://www.acchi.life/categories/gc/</link>
+      <pubDate>Mon, 23 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.acchi.life/categories/gc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>java</title>
+      <link>https://www.acchi.life/categories/java/</link>
+      <pubDate>Mon, 23 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.acchi.life/categories/java/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>docker</title>
       <link>https://www.acchi.life/categories/docker/</link>
