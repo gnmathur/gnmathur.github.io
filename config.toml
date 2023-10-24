@@ -14,7 +14,7 @@ style = "github-dark"
   info = "Software Engineering // Programming // And other interesting things.. "
   description = "Gaurav Mathur's personal website"
   keywords = "blog,developer,personal"
-  avatarurl = "/img/avatar.jpeg"
+  avatarurl = "/img/drawn.jpg"
   # gravatar = "[gaurav.mathur AT ymail.com]"
 
   faviconSVG = "/img/favicon.svg"
