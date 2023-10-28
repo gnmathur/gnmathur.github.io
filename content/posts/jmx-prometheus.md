@@ -126,7 +126,6 @@ public class MyApplicationMetrics implements MyApplicationMetricsMBean {
 ## Register the MBean with the MBeanServer:
 
 ```java
-
 MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 ObjectInstance objectInstance = mbs.registerMBean(new MyApplicationMetrics(), new ObjectName("com.myapp:type=MyApplicationMetrics"));
 ```
