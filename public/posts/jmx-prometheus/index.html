@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Exporting metrics to Prometheus using JMX JavaAgent · Acchi Life
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Gaurav Mathur">
+<meta name="description" content="Exporting metrics to Prometheus using JMX JavaAgent">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Exporting metrics to Prometheus using JMX JavaAgent"/>
+<meta name="twitter:description" content="Exporting metrics to Prometheus using JMX JavaAgent"/>
+
+<meta property="og:title" content="Exporting metrics to Prometheus using JMX JavaAgent" />
+<meta property="og:description" content="Exporting metrics to Prometheus using JMX JavaAgent" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.acchi.life/posts/jmx-prometheus/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-10-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-10-28T00:00:00+00:00" />
+<meta property="og:see_also" content="https://www.acchi.life/posts/excess-gc-trigger/" />
+
+
+
+
+
+<link rel="canonical" href="https://www.acchi.life/posts/jmx-prometheus/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Acchi Life
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://www.acchi.life/posts/jmx-prometheus/">
+              Exporting metrics to Prometheus using JMX JavaAgent
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-10-28T00:00:00Z">
+                October 28, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          <div class="authors">
+  <i class="fa fa-user" aria-hidden="true"></i>
+    <a href="/authors/gaurav-mathur/">Gaurav Mathur</a></div>
+
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/java/">java</a>
+      <span class="separator">•</span>
+    <a href="/categories/jmx/">JMX</a>
+      <span class="separator">•</span>
+    <a href="/categories/jvm/">JVM</a>
+      <span class="separator">•</span>
+    <a href="/categories/prometheus/">prometheus</a></div>
+
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/java/">java</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/prometheus/">prometheus</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/jvm/">jvm</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/jmx/">JMX</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/mbean/">MBean</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>Java <a href="https://www.oracle.com/technical-resources/articles/javase/jmx.html"  class="external-link" target="_blank" rel="noopener">JMX</a> is a powerful technology that&rsquo;s available in Java natively. JXM has many uses and can form the basis of a powerful application management and monitoring system. What we will focus on in this article is the capability of JMX to provide a rich set of JVM metrics out-of-the-box, including -</p>
+<ul>
+<li>Garbage collection statistics</li>
+<li>Memory usage (heap and non-heap)</li>
+<li>Thread metrics</li>
+<li>Class loading stats</li>
+<li>And much more&hellip;</li>
+</ul>
+<p>There are tools like <a href="https://visualvm.github.io/"  class="external-link" target="_blank" rel="noopener">VisualVM</a>, <a href="https://www.yourkit.com/"  class="external-link" target="_blank" rel="noopener">YourKit</a> etc. that you can use to view these metrics by attaching these tools to a running JVM process. What if we want to <em>export</em> these metrics and view them in a Grafana? If your Grafana installation supports Prometheus as a data source, then one way to do this is via a <a href="https://github.com/prometheus/jmx_exporter"  class="external-link" target="_blank" rel="noopener">JMX to Prometheus exporter</a>.</p>
+<p>Next, we&rsquo;ll walk through the steps to use the JMX exporter JavaAgent to pull metrics from a Java application and make them available for Prometheus to scrape.</p>
+<h1 id="pre-requisites">
+  Pre-requisites
+  <a class="heading-link" href="#pre-requisites">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<ul>
+<li>A Java application with JMX enabled</li>
+<li>Prometheus up and running (and optionally a Grafana installation with Prometheus as a Data Source)</li>
+<li>The JMX exporter jar, which can be <a href="https://github.com/prometheus/jmx_exporter/releases"  class="external-link" target="_blank" rel="noopener">downloaded from GitHub</a></li>
+</ul>
+<h1 id="configuring-jmx-exporter">
+  Configuring JMX Exporter
+  <a class="heading-link" href="#configuring-jmx-exporter">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Before running your Java application, you&rsquo;ll need a configuration file for the JMX exporter. This file helps specify which JMX metrics you&rsquo;re interested in and how they should be exported.</p>
+<p>A basic configuration (let&rsquo;s call it <code>config.yml</code>) might look like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="font-weight:bold">rules</span>:
+- <span style="font-weight:bold">pattern</span>: <span style="color:#0ff;font-weight:bold">&#39;.*&#39;</span>
+</code></pre></div><p>This configuration will export all JMX metrics. However, for most applications, you&rsquo;d want more specific rules to filter or rename metrics. Refer to <a href="https://github.com/prometheus/jmx_exporter#configuration"  class="external-link" target="_blank" rel="noopener">this page</a> for a reference of all the keywords and expressiveness that can be added to the configuration. Also, the <a href="https://github.com/prometheus/jmx_exporter/tree/main/example_configs"  class="external-link" target="_blank" rel="noopener">example_configs</a> folder in the JMX exporter project has many examples for configuring popular software. The examples can be used to better understand the different configuration constructs and idioms.</p>
+<h1 id="running-your-java-application-with-jmx_exporter">
+  Running your Java application with jmx_exporter
+  <a class="heading-link" href="#running-your-java-application-with-jmx_exporter">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Use the <code>-javaagent</code> JVM argument to attach the JMX exporter to your application:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">java -javaagent:/path/to/jmx_prometheus_javaagent-&lt;version&gt;.jar=&lt;port&gt;:&lt;path_to_config_file&gt; -jar your-java-app.jar
+</code></pre></div><p>Replace <code>version</code>, <code>port</code>, and <code>path_to_config_file</code> with appropriate values. Once your application is running, it will start serving metrics on the specified port under the <code>/metrics</code> endpoint.</p>
+<p>Note: The JMX exporter JavaAgent supports built-in HTTP server</p>
+<h1 id="configuring-prometheus-to-scrape-metrics">
+  Configuring Prometheus to scrape metrics
+  <a class="heading-link" href="#configuring-prometheus-to-scrape-metrics">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Now, update Prometheus&rsquo;s configuration to scrape the metrics:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="font-weight:bold">scrape_configs</span>:
+  - <span style="font-weight:bold">job_name</span>: <span style="color:#0ff;font-weight:bold">&#39;jmx-exporter&#39;</span>
+    <span style="font-weight:bold">static_configs</span>:
+    - <span style="font-weight:bold">targets</span>: [<span style="color:#0ff;font-weight:bold">&#39;localhost:&lt;port&gt;&#39;</span>]
+</code></pre></div><p>Replace <!-- raw HTML omitted --> with the port number you specified while starting the Java application.</p>
+<h1 id="viewing-metrics">
+  Viewing Metrics
+  <a class="heading-link" href="#viewing-metrics">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<h2 id="in-prometheus-for-verification">
+  In Prometheus for verification
+  <a class="heading-link" href="#in-prometheus-for-verification">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Once everything is set up and running:</p>
+<ul>
+<li>Navigate to the Prometheus UI.</li>
+<li>Select the jmx-exporter job.</li>
+<li>Browse the available metrics, which will have names based on their JMX names.</li>
+</ul>
+<h1 id="exporting-application-metrics-via-jmx">
+  Exporting application metrics via JMX
+  <a class="heading-link" href="#exporting-application-metrics-via-jmx">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>While these built-in metrics offer valuable insights into the JVM&rsquo;s internals, there&rsquo;s another layer of observability you can tap into leveraging the capability of JMX:  your application&rsquo;s business logic and performance related metrics. These application-specific metrics will be exported over the same interface, over which the JVM metrics are being exported. So, in addition to the standard JMX metrics, you can instrument your application to expose custom JMX MBeans that reflect specific behaviors or characteristics important to your domain. Here&rsquo;s how you can do it:</p>
+<h2 id="define-your-mbean-interface">
+  Define your MBean Interface
+  <a class="heading-link" href="#define-your-mbean-interface">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>This interface will declare the methods you want to expose via JMX.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">interface</span> MyApplicationMetricsMBean {
+    <span style="color:#fff;font-weight:bold">int</span> getInterfaceTxBytes();
+    <span style="color:#fff;font-weight:bold">int</span> getInterfaceRxBytes();
+    <span style="color:#fff;font-weight:bold">long</span> getAuthSuccessCount();
+    <span style="color:#fff;font-weight:bold">long</span> getAuthRejectCount();
+}
+</code></pre></div><h2 id="implement-the-mbean-this-class-provides-the-actual-metric-values">
+  Implement the MBean: This class provides the actual metric values.
+  <a class="heading-link" href="#implement-the-mbean-this-class-provides-the-actual-metric-values">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
+<span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">class</span> MyApplicationMetrics <span style="color:#fff;font-weight:bold">implements</span> MyApplicationMetricsMBean {
+    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">int</span> getInterfaceTxBytes() {
+        <span style="color:#007f7f">// Your logic to return the number of Tx bytes goes here
+</span><span style="color:#007f7f"></span>    }
+    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">int</span> getInterfaceRxBytes() {
+        <span style="color:#007f7f">// Your logic to return the number of Rx bytes goes here
+</span><span style="color:#007f7f"></span>    }
+    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">long</span> getAuthSuccessCount() {
+        <span style="color:#007f7f">// Your logic to return the successful authentication attempts goes here
+</span><span style="color:#007f7f"></span>    }
+    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">long</span> getAuthRejectCount() {
+        <span style="color:#007f7f">// Your logic to return failed authentication attempts goes here
+</span><span style="color:#007f7f"></span>
+    }
+}
+</code></pre></div><h2 id="register-the-mbean-with-the-mbeanserver">
+  Register the MBean with the MBeanServer:
+  <a class="heading-link" href="#register-the-mbean-with-the-mbeanserver">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
+MBeanServer mbs = ManagementFactory.<span style="color:#007f7f">getPlatformMBeanServer</span>();
+ObjectInstance objectInstance = mbs.<span style="color:#007f7f">registerMBean</span>(<span style="color:#fff;font-weight:bold">new</span> MyApplicationMetrics(), <span style="color:#fff;font-weight:bold">new</span> ObjectName(<span style="color:#0ff;font-weight:bold">&#34;com.myapp:type=MyApplicationMetrics&#34;</span>));
+</code></pre></div><h2 id="configure-jmx-exporter-to-export-your-custom-metrics">
+  Configure JMX Exporter to Export Your Custom Metrics
+  <a class="heading-link" href="#configure-jmx-exporter-to-export-your-custom-metrics">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>When setting up your JMX Exporter configuration file, ensure that your custom metrics' names or patterns are included, so they&rsquo;re picked up and exported to Prometheus.</p>
+<p>With these steps, not only will you have a rich set of JVM metrics, but you&rsquo;ll also be able to monitor and alert on metrics that directly pertain to your application&rsquo;s business logic and performance. This combination makes for a powerful and uniform observability solution for your application, allowing you to understand both the health of your JVM and the behavior of your application.</p>
+<h1 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The JMX exporter offers a seamless way to export JMX metrics from Java applications to Prometheus. By transforming these metrics into a Prometheus-friendly format, you can leverage all the powerful querying, alerting, and dashboarding features that Prometheus provides. Whether you&rsquo;re running a single Java application or overseeing a fleet of microservices, integrating JMX metrics with Prometheus can provide a deeper understanding of your system&rsquo;s health and performance.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+      <h3 id="see-also-in-java">
+        See also in Java
+        <a class="heading-link" href="#see-also-in-java">
+          <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+          <span class="sr-only">Link to heading</span>
+        </a>
+      </h3>
+      <nav>
+        <ul>
+        
+        
+          
+        
+          
+            <li>
+              <a href="/posts/excess-gc-trigger/">Triggering a custom callback on excessive GC activity in Java</a>
+            </li>
+          
+        
+        </ul>
+      </nav>
+    
+  
+</section>
+
+
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2023
+     Gaurav Mathur 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
