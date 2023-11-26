@@ -6,15 +6,21 @@
     <description>Recent content in docker on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 10 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/categories/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 10 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.acchi.life/categories/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Deleting stale containers</title>
       <link>https://www.acchi.life/posts/remove-stale-containers/</link>
       <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/posts/remove-stale-containers/</guid>
       <description>&lt;p&gt;Oftentimes you want to remove the stopped or exited containers that you don&amp;rsquo;t intend to start again.&lt;/p&gt;</description>
     </item>
-    
+    <item>
+      <title>Improved init for Docker containers</title>
+      <link>https://www.acchi.life/posts/init-system-for-docker-containers/</link>
+      <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.acchi.life/posts/init-system-for-docker-containers/</guid>
+      <description>Let&amp;rsquo;s start with an application that has to run in a Docker container. One of the primary requirements for this application would be handle graceful exits. So the application inside the container has to handle signals properly. That means that the application has to be PID 1. PID 1 has a special significance inside containers. Among other things, PID 1 is responsible for handling system signals sent to the container. For example, when you stop a container, Docker sends a SIGTERM signal to PID 1.</description>
+    </item>
   </channel>
 </rss>

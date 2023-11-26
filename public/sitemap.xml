@@ -17,13 +17,13 @@
     <loc>https://www.acchi.life/authors/gaurav-mathur/</loc>
     <lastmod>2023-10-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://www.acchi.life/series/java/</loc>
-    <lastmod>2023-10-28T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://www.acchi.life/tags/java/</loc>
     <lastmod>2023-10-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.acchi.life/categories/java/</loc>
+    <lastmod>2023-10-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.acchi.life/series/java/</loc>
     <lastmod>2023-10-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.acchi.life/tags/jmx/</loc>
@@ -32,10 +32,10 @@
     <loc>https://www.acchi.life/categories/jmx/</loc>
     <lastmod>2023-10-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://www.acchi.life/categories/jvm/</loc>
+    <loc>https://www.acchi.life/tags/jvm/</loc>
     <lastmod>2023-10-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://www.acchi.life/tags/jvm/</loc>
+    <loc>https://www.acchi.life/categories/jvm/</loc>
     <lastmod>2023-10-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.acchi.life/tags/mbean/</loc>
@@ -74,13 +74,22 @@
     <loc>https://www.acchi.life/posts/remove-stale-containers/</loc>
     <lastmod>2023-10-10T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://www.acchi.life/series/docker/</loc>
-    <lastmod>2023-10-10T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://www.acchi.life/tags/docker/</loc>
     <lastmod>2023-10-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.acchi.life/categories/docker/</loc>
+    <lastmod>2023-10-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.acchi.life/series/docker/</loc>
+    <lastmod>2023-10-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.acchi.life/posts/init-system-for-docker-containers/</loc>
+    <lastmod>2023-10-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.acchi.life/tags/patterns/</loc>
+    <lastmod>2023-10-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.acchi.life/categories/patterns/</loc>
     <lastmod>2023-10-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.acchi.life/tags/recipes/</loc>

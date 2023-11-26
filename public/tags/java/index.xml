@@ -6,22 +6,20 @@
     <description>Recent content in java on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 28 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 28 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.acchi.life/tags/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exporting metrics to Prometheus using JMX JavaAgent</title>
       <link>https://www.acchi.life/posts/jmx-prometheus/</link>
       <pubDate>Sat, 28 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/posts/jmx-prometheus/</guid>
       <description>Java JMX is a powerful technology that&amp;rsquo;s available in Java natively. JXM has many uses and can form the basis of a powerful application management and monitoring system. What we will focus on in this article is the capability of JMX to provide a rich set of JVM metrics out-of-the-box, including -
- Garbage collection statistics Memory usage (heap and non-heap) Thread metrics Class loading stats And much more&amp;hellip;  There are tools like VisualVM, YourKit etc.</description>
+Garbage collection statistics Memory usage (heap and non-heap) Thread metrics Class loading stats And much more&amp;hellip; There are tools like VisualVM, YourKit etc.</description>
     </item>
-    
     <item>
       <title>Triggering a custom callback on excessive GC activity in Java</title>
       <link>https://www.acchi.life/posts/excess-gc-trigger/</link>
       <pubDate>Mon, 23 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/posts/excess-gc-trigger/</guid>
       <description>&lt;p&gt;We might want to invoke some business logic when there is excessive GC activity in out program. The code snippet below shows one way
 of doing that. It defines a &lt;code&gt;GCAnalyzer&lt;/code&gt; class that takes the following key parameters -&lt;/p&gt;
@@ -35,6 +33,5 @@ consecutive STW (Stop-The-World) cycles, or consecutive full GC cycles.&lt;/p&gt
 &lt;p&gt;It works by keeping track of the GC times in the last &lt;code&gt;trackedCycles&lt;/code&gt; cycles, and the total time spent from the start of the first cycle, to the
 end of the last one.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -6,87 +6,77 @@
     <description>Recent content in Tags on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 28 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 28 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.acchi.life/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>java</title>
       <link>https://www.acchi.life/tags/java/</link>
       <pubDate>Sat, 28 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/java/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>JMX</title>
       <link>https://www.acchi.life/tags/jmx/</link>
       <pubDate>Sat, 28 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/jmx/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>jvm</title>
       <link>https://www.acchi.life/tags/jvm/</link>
       <pubDate>Sat, 28 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/jvm/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>MBean</title>
       <link>https://www.acchi.life/tags/mbean/</link>
       <pubDate>Sat, 28 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/mbean/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>prometheus</title>
       <link>https://www.acchi.life/tags/prometheus/</link>
       <pubDate>Sat, 28 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/prometheus/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>gc</title>
       <link>https://www.acchi.life/tags/gc/</link>
       <pubDate>Mon, 23 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/gc/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>java 17</title>
       <link>https://www.acchi.life/tags/java-17/</link>
       <pubDate>Mon, 23 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/java-17/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>docker</title>
       <link>https://www.acchi.life/tags/docker/</link>
       <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/docker/</guid>
       <description></description>
     </item>
-    
+    <item>
+      <title>patterns</title>
+      <link>https://www.acchi.life/tags/patterns/</link>
+      <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.acchi.life/tags/patterns/</guid>
+      <description></description>
+    </item>
     <item>
       <title>recipes</title>
       <link>https://www.acchi.life/tags/recipes/</link>
       <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/tags/recipes/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

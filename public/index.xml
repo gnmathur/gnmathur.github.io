@@ -6,22 +6,20 @@
     <description>Recent content on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 28 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 28 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.acchi.life/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exporting metrics to Prometheus using JMX JavaAgent</title>
       <link>https://www.acchi.life/posts/jmx-prometheus/</link>
       <pubDate>Sat, 28 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/posts/jmx-prometheus/</guid>
       <description>Java JMX is a powerful technology that&amp;rsquo;s available in Java natively. JXM has many uses and can form the basis of a powerful application management and monitoring system. What we will focus on in this article is the capability of JMX to provide a rich set of JVM metrics out-of-the-box, including -
- Garbage collection statistics Memory usage (heap and non-heap) Thread metrics Class loading stats And much more&amp;hellip;  There are tools like VisualVM, YourKit etc.</description>
+Garbage collection statistics Memory usage (heap and non-heap) Thread metrics Class loading stats And much more&amp;hellip; There are tools like VisualVM, YourKit etc.</description>
     </item>
-    
     <item>
       <title>Triggering a custom callback on excessive GC activity in Java</title>
       <link>https://www.acchi.life/posts/excess-gc-trigger/</link>
       <pubDate>Mon, 23 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/posts/excess-gc-trigger/</guid>
       <description>&lt;p&gt;We might want to invoke some business logic when there is excessive GC activity in out program. The code snippet below shows one way
 of doing that. It defines a &lt;code&gt;GCAnalyzer&lt;/code&gt; class that takes the following key parameters -&lt;/p&gt;
@@ -35,25 +33,27 @@ consecutive STW (Stop-The-World) cycles, or consecutive full GC cycles.&lt;/p&gt
 &lt;p&gt;It works by keeping track of the GC times in the last &lt;code&gt;trackedCycles&lt;/code&gt; cycles, and the total time spent from the start of the first cycle, to the
 end of the last one.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>About</title>
       <link>https://www.acchi.life/about/</link>
       <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/about/</guid>
       <description>Hello, I&amp;rsquo;m Gaurav Mathur. I&amp;rsquo;m a software engineer based in the San Francisco Bay Area. This platform serves as a space where I share insights on programming and software systems. Occasionally, I&amp;rsquo;ll delve into other topics that pique my interest.
 The name Acchi Life is inspired by the Hindi word Acchi, meaning good. It represents the positive experiences that shape my writings and what I enjoy talking about.</description>
     </item>
-    
     <item>
       <title>Deleting stale containers</title>
       <link>https://www.acchi.life/posts/remove-stale-containers/</link>
       <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/posts/remove-stale-containers/</guid>
       <description>&lt;p&gt;Oftentimes you want to remove the stopped or exited containers that you don&amp;rsquo;t intend to start again.&lt;/p&gt;</description>
     </item>
-    
+    <item>
+      <title>Improved init for Docker containers</title>
+      <link>https://www.acchi.life/posts/init-system-for-docker-containers/</link>
+      <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.acchi.life/posts/init-system-for-docker-containers/</guid>
+      <description>Let&amp;rsquo;s start with an application that has to run in a Docker container. One of the primary requirements for this application would be handle graceful exits. So the application inside the container has to handle signals properly. That means that the application has to be PID 1. PID 1 has a special significance inside containers. Among other things, PID 1 is responsible for handling system signals sent to the container. For example, when you stop a container, Docker sends a SIGTERM signal to PID 1.</description>
+    </item>
   </channel>
 </rss>

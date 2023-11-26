@@ -32,6 +32,7 @@
 
 
 
+
 <link rel="canonical" href="https://www.acchi.life/posts/jmx-prometheus/">
 
 
@@ -221,9 +222,9 @@
 </h1>
 <p>Before running your Java application, you&rsquo;ll need a configuration file for the JMX exporter. This file helps specify which JMX metrics you&rsquo;re interested in and how they should be exported.</p>
 <p>A basic configuration (let&rsquo;s call it <code>config.yml</code>) might look like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="font-weight:bold">rules</span>:
-- <span style="font-weight:bold">pattern</span>: <span style="color:#0ff;font-weight:bold">&#39;.*&#39;</span>
-</code></pre></div><p>This configuration will export all JMX metrics. However, for most applications, you&rsquo;d want more specific rules to filter or rename metrics. Refer to <a href="https://github.com/prometheus/jmx_exporter#configuration"  class="external-link" target="_blank" rel="noopener">this page</a> for a reference of all the keywords and expressiveness that can be added to the configuration. Also, the <a href="https://github.com/prometheus/jmx_exporter/tree/main/example_configs"  class="external-link" target="_blank" rel="noopener">example_configs</a> folder in the JMX exporter project has many examples for configuring popular software. The examples can be used to better understand the different configuration constructs and idioms.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#7ee787">rules</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>- <span style="color:#7ee787">pattern</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;.*&#39;</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>This configuration will export all JMX metrics. However, for most applications, you&rsquo;d want more specific rules to filter or rename metrics. Refer to <a href="https://github.com/prometheus/jmx_exporter#configuration"  class="external-link" target="_blank" rel="noopener">this page</a> for a reference of all the keywords and expressiveness that can be added to the configuration. Also, the <a href="https://github.com/prometheus/jmx_exporter/tree/main/example_configs"  class="external-link" target="_blank" rel="noopener">example_configs</a> folder in the JMX exporter project has many examples for configuring popular software. The examples can be used to better understand the different configuration constructs and idioms.</p>
 <h1 id="running-your-java-application-with-jmx_exporter">
   Running your Java application with jmx_exporter
   <a class="heading-link" href="#running-your-java-application-with-jmx_exporter">
@@ -232,8 +233,8 @@
   </a>
 </h1>
 <p>Use the <code>-javaagent</code> JVM argument to attach the JMX exporter to your application:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">java -javaagent:/path/to/jmx_prometheus_javaagent-&lt;version&gt;.jar=&lt;port&gt;:&lt;path_to_config_file&gt; -jar your-java-app.jar
-</code></pre></div><p>Replace <code>version</code>, <code>port</code>, and <code>path_to_config_file</code> with appropriate values. Once your application is running, it will start serving metrics on the specified port under the <code>/metrics</code> endpoint.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>java -javaagent:/path/to/jmx_prometheus_javaagent-&lt;version&gt;.jar<span style="color:#ff7b72;font-weight:bold">=</span>&lt;port&gt;:&lt;path_to_config_file&gt; -jar your-java-app.jar
+</span></span></code></pre></div><p>Replace <code>version</code>, <code>port</code>, and <code>path_to_config_file</code> with appropriate values. Once your application is running, it will start serving metrics on the specified port under the <code>/metrics</code> endpoint.</p>
 <p>Note: The JMX exporter JavaAgent supports built-in HTTP server</p>
 <h1 id="configuring-prometheus-to-scrape-metrics">
   Configuring Prometheus to scrape metrics
@@ -243,11 +244,11 @@
   </a>
 </h1>
 <p>Now, update Prometheus&rsquo;s configuration to scrape the metrics:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="font-weight:bold">scrape_configs</span>:
-  - <span style="font-weight:bold">job_name</span>: <span style="color:#0ff;font-weight:bold">&#39;jmx-exporter&#39;</span>
-    <span style="font-weight:bold">static_configs</span>:
-    - <span style="font-weight:bold">targets</span>: [<span style="color:#0ff;font-weight:bold">&#39;localhost:&lt;port&gt;&#39;</span>]
-</code></pre></div><p>Replace <!-- raw HTML omitted --> with the port number you specified while starting the Java application.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#7ee787">scrape_configs</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span>- <span style="color:#7ee787">job_name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;jmx-exporter&#39;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">static_configs</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>- <span style="color:#7ee787">targets</span>:<span style="color:#6e7681"> </span>[<span style="color:#a5d6ff">&#39;localhost:&lt;port&gt;&#39;</span>]<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Replace <!-- raw HTML omitted --> with the port number you specified while starting the Java application.</p>
 <h1 id="viewing-metrics">
   Viewing Metrics
   <a class="heading-link" href="#viewing-metrics">
@@ -284,52 +285,52 @@
   </a>
 </h2>
 <p>This interface will declare the methods you want to expose via JMX.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">interface</span> MyApplicationMetricsMBean {
-    <span style="color:#fff;font-weight:bold">int</span> getInterfaceTxBytes();
-    <span style="color:#fff;font-weight:bold">int</span> getInterfaceRxBytes();
-    <span style="color:#fff;font-weight:bold">long</span> getAuthSuccessCount();
-    <span style="color:#fff;font-weight:bold">long</span> getAuthRejectCount();
-}
-</code></pre></div><h2 id="implement-the-mbean-this-class-provides-the-actual-metric-values">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">interface</span> <span style="color:#f0883e;font-weight:bold">MyApplicationMetricsMBean</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">int</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getInterfaceTxBytes</span>();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">int</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getInterfaceRxBytes</span>();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getAuthSuccessCount</span>();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getAuthRejectCount</span>();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><h2 id="implement-the-mbean-this-class-provides-the-actual-metric-values">
   Implement the MBean: This class provides the actual metric values.
   <a class="heading-link" href="#implement-the-mbean-this-class-provides-the-actual-metric-values">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
-<span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">class</span> MyApplicationMetrics <span style="color:#fff;font-weight:bold">implements</span> MyApplicationMetricsMBean {
-    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">int</span> getInterfaceTxBytes() {
-        <span style="color:#007f7f">// Your logic to return the number of Tx bytes goes here
-</span><span style="color:#007f7f"></span>    }
-    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">int</span> getInterfaceRxBytes() {
-        <span style="color:#007f7f">// Your logic to return the number of Rx bytes goes here
-</span><span style="color:#007f7f"></span>    }
-    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">long</span> getAuthSuccessCount() {
-        <span style="color:#007f7f">// Your logic to return the successful authentication attempts goes here
-</span><span style="color:#007f7f"></span>    }
-    <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">long</span> getAuthRejectCount() {
-        <span style="color:#007f7f">// Your logic to return failed authentication attempts goes here
-</span><span style="color:#007f7f"></span>
-    }
-}
-</code></pre></div><h2 id="register-the-mbean-with-the-mbeanserver">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">MyApplicationMetrics</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">implements</span><span style="color:#6e7681"> </span>MyApplicationMetricsMBean<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">int</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getInterfaceTxBytes</span>()<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#8b949e;font-style:italic">// Your logic to return the number of Tx bytes goes here</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">int</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getInterfaceRxBytes</span>()<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#8b949e;font-style:italic">// Your logic to return the number of Rx bytes goes here</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getAuthSuccessCount</span>()<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#8b949e;font-style:italic">// Your logic to return the successful authentication attempts goes here</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">getAuthRejectCount</span>()<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#8b949e;font-style:italic">// Your logic to return failed authentication attempts goes here</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><h2 id="register-the-mbean-with-the-mbeanserver">
   Register the MBean with the MBeanServer:
   <a class="heading-link" href="#register-the-mbean-with-the-mbeanserver">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">MBeanServer mbs = ManagementFactory.<span style="color:#007f7f">getPlatformMBeanServer</span>();
-ObjectInstance objectInstance = mbs.<span style="color:#007f7f">registerMBean</span>(<span style="color:#fff;font-weight:bold">new</span> MyApplicationMetrics(), <span style="color:#fff;font-weight:bold">new</span> ObjectName(<span style="color:#0ff;font-weight:bold">&#34;com.myapp:type=MyApplicationMetrics&#34;</span>));
-</code></pre></div><h2 id="configure-jmx-exporter-to-export-your-custom-metrics">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>MBeanServer<span style="color:#6e7681"> </span>mbs<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>ManagementFactory.getPlatformMBeanServer();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>ObjectInstance<span style="color:#6e7681"> </span>objectInstance<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>mbs.registerMBean(<span style="color:#ff7b72">new</span><span style="color:#6e7681"> </span>MyApplicationMetrics(),<span style="color:#6e7681"> </span><span style="color:#ff7b72">new</span><span style="color:#6e7681"> </span>ObjectName(<span style="color:#a5d6ff">&#34;com.myapp:type=MyApplicationMetrics&#34;</span>));<span style="color:#6e7681">
+</span></span></span></code></pre></div><h2 id="configure-jmx-exporter-to-export-your-custom-metrics">
   Configure JMX Exporter to Export Your Custom Metrics
   <a class="heading-link" href="#configure-jmx-exporter-to-export-your-custom-metrics">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<p>When setting up your JMX Exporter configuration file, ensure that your custom metrics' names or patterns are included, so they&rsquo;re picked up and exported to Prometheus.</p>
+<p>When setting up your JMX Exporter configuration file, ensure that your custom metrics&rsquo; names or patterns are included, so they&rsquo;re picked up and exported to Prometheus.</p>
 <p>With these steps, not only will you have a rich set of JVM metrics, but you&rsquo;ll also be able to monitor and alert on metrics that directly pertain to your application&rsquo;s business logic and performance. This combination makes for a powerful and uniform observability solution for your application, allowing you to understand both the health of your JVM and the behavior of your application.</p>
 <h1 id="conclusion">
   Conclusion
@@ -409,7 +410,7 @@ ObjectInstance objectInstance = mbs.<span style="color:#007f7f">registerMBean</s
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

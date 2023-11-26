@@ -6,15 +6,14 @@
     <description>Recent content in recipes on Acchi Life</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 10 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://www.acchi.life/categories/recipes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 10 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.acchi.life/categories/recipes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Deleting stale containers</title>
       <link>https://www.acchi.life/posts/remove-stale-containers/</link>
       <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://www.acchi.life/posts/remove-stale-containers/</guid>
       <description>&lt;p&gt;Oftentimes you want to remove the stopped or exited containers that you don&amp;rsquo;t intend to start again.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

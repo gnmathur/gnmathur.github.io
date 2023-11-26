@@ -26,6 +26,7 @@
 <meta property="og:url" content="https://www.acchi.life/posts/remove-stale-containers/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-10-10T00:00:00+00:00" />
 <meta property="article:modified_time" content="2023-10-10T00:00:00+00:00" />
+<meta property="og:see_also" content="https://www.acchi.life/posts/init-system-for-docker-containers/" />
 
 
 
@@ -176,41 +177,41 @@
         
         <p>Oftentimes you want to remove the stopped or exited containers that you don&rsquo;t intend to start again.</p>
 <p>Here&rsquo;s how to do it&hellip;</p>
-<pre tabindex="0"><code>$ docker rm `docker ps -a -q -f &quot;status=exited&quot;`
+<pre tabindex="0"><code>$ docker rm `docker ps -a -q -f &#34;status=exited&#34;`
 </code></pre><p>For example,</p>
 <p><code>docker ps -a</code> gives you the list the following containers</p>
 <pre tabindex="0"><code>&gt; git:(main) docker ps -a
-5eca36be7c12   87689a8e1265    &quot;/__cacert_entrypoin…&quot;   7 hours ago    Exited (130) 7 hours ago              competent_torvalds                                                                             
-e1093949e6cb   bec30be74fb3    &quot;/__cacert_entrypoin…&quot;   7 hours ago    Exited (1) 7 hours ago                unruffled_wiles                                                                                
-8a0f435c8a5d   b686192cfc5f    &quot;/__cacert_entrypoin…&quot;   8 hours ago    Exited (130) 8 hours ago              keen_bardeen                                                                                   
-c047cfa3b253   saarekaam:0.1   &quot;/__cacert_entrypoin…&quot;   29 hours ago   Exited (137) 29 hours ago             tender_goldberg                                                                                
-80bd9088b788   19b6e73abb2b    &quot;/__cacert_entrypoin…&quot;   29 hours ago   Exited (137) 29 hours ago             eager_albattani                                                                                
-46a1d61011af   19b6e73abb2b    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (137) 31 hours ago             brave_fermat                                                                                   
-0d2c1071066e   f0fc0f94729e    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               beautiful_sammet                                                                               
-f60a7321ab32   2769272fbbc8    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               jovial_heisenberg                                                                              
-181aff5f575b   2769272fbbc8    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               focused_borg                                                                                   
-e13f55715c2b   2769272fbbc8    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               lucid_bartik                                                                                   
-581ef651d8ce   9e7ae85c6825    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               jolly_shaw                                                                                     
-a86927a05147   9e7ae85c6825    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               eager_carver                                                                                   
-f4c3784627f1   5a7c50d65bc7    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               xenodochial_keldysh                                                                            
-27926181cc78   5a7c50d65bc7    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               romantic_jennings                                                                              
-301348b8c935   83bc63193f8c    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (0) 32 hours ago               competent_cori                                                                                 
-f6143e6f8bc1   83bc63193f8c    &quot;/__cacert_entrypoin…&quot;   32 hours ago   Exited (1) 32 hours ago               funny_dijkstra                                                                                 
-6b1ddcfb15af   gnms:0.1        &quot;pypy3 main.py&quot;          3 weeks ago    Exited (0) 3 weeks ago                gnms                                                                                           
-e09de0c5d5a8   fcfdcd822485    &quot;--name gnms&quot;            3 weeks ago    Created                               dreamy_ramanujan                                                                               
-5971e11e121b   fcfdcd822485    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                focused_khayyam                                                                                
-43883ac4b298   fcfdcd822485    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                heuristic_mirzakhani                                                                           
-3aa5b7c8fa31   4ecbcedae7d3    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                magical_liskov                                                                                 
-cb4770e494e9   4ecbcedae7d3    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                stoic_zhukovsky                                                                                
-e221d6a047e0   bbe5f44bd0ca    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                exciting_saha                                                                                  
-311e875a18c8   09c069097d92    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                practical_dubinsky                                                                             
-f03a192b7863   657ddfb7361a    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                peaceful_jepsen                                                                                
-4d553ecee119   8a7a7c872a4b    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                interesting_lalande                                                                            
-82589ec89861   8a7a7c872a4b    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                vigilant_mayer                                                                                 
-08eee73971f2   09db4d71eae6    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                magical_cannon                                                                                 
-83c108a3b72c   0a31c16014a1    &quot;python3 main.py&quot;        3 weeks ago    Exited (0) 3 weeks ago                fervent_goldstine 
+5eca36be7c12   87689a8e1265    &#34;/__cacert_entrypoin…&#34;   7 hours ago    Exited (130) 7 hours ago              competent_torvalds                                                                             
+e1093949e6cb   bec30be74fb3    &#34;/__cacert_entrypoin…&#34;   7 hours ago    Exited (1) 7 hours ago                unruffled_wiles                                                                                
+8a0f435c8a5d   b686192cfc5f    &#34;/__cacert_entrypoin…&#34;   8 hours ago    Exited (130) 8 hours ago              keen_bardeen                                                                                   
+c047cfa3b253   saarekaam:0.1   &#34;/__cacert_entrypoin…&#34;   29 hours ago   Exited (137) 29 hours ago             tender_goldberg                                                                                
+80bd9088b788   19b6e73abb2b    &#34;/__cacert_entrypoin…&#34;   29 hours ago   Exited (137) 29 hours ago             eager_albattani                                                                                
+46a1d61011af   19b6e73abb2b    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (137) 31 hours ago             brave_fermat                                                                                   
+0d2c1071066e   f0fc0f94729e    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (1) 32 hours ago               beautiful_sammet                                                                               
+f60a7321ab32   2769272fbbc8    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (1) 32 hours ago               jovial_heisenberg                                                                              
+181aff5f575b   2769272fbbc8    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (0) 32 hours ago               focused_borg                                                                                   
+e13f55715c2b   2769272fbbc8    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (1) 32 hours ago               lucid_bartik                                                                                   
+581ef651d8ce   9e7ae85c6825    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (0) 32 hours ago               jolly_shaw                                                                                     
+a86927a05147   9e7ae85c6825    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (1) 32 hours ago               eager_carver                                                                                   
+f4c3784627f1   5a7c50d65bc7    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (0) 32 hours ago               xenodochial_keldysh                                                                            
+27926181cc78   5a7c50d65bc7    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (1) 32 hours ago               romantic_jennings                                                                              
+301348b8c935   83bc63193f8c    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (0) 32 hours ago               competent_cori                                                                                 
+f6143e6f8bc1   83bc63193f8c    &#34;/__cacert_entrypoin…&#34;   32 hours ago   Exited (1) 32 hours ago               funny_dijkstra                                                                                 
+6b1ddcfb15af   gnms:0.1        &#34;pypy3 main.py&#34;          3 weeks ago    Exited (0) 3 weeks ago                gnms                                                                                           
+e09de0c5d5a8   fcfdcd822485    &#34;--name gnms&#34;            3 weeks ago    Created                               dreamy_ramanujan                                                                               
+5971e11e121b   fcfdcd822485    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                focused_khayyam                                                                                
+43883ac4b298   fcfdcd822485    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                heuristic_mirzakhani                                                                           
+3aa5b7c8fa31   4ecbcedae7d3    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                magical_liskov                                                                                 
+cb4770e494e9   4ecbcedae7d3    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                stoic_zhukovsky                                                                                
+e221d6a047e0   bbe5f44bd0ca    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                exciting_saha                                                                                  
+311e875a18c8   09c069097d92    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                practical_dubinsky                                                                             
+f03a192b7863   657ddfb7361a    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                peaceful_jepsen                                                                                
+4d553ecee119   8a7a7c872a4b    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                interesting_lalande                                                                            
+82589ec89861   8a7a7c872a4b    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                vigilant_mayer                                                                                 
+08eee73971f2   09db4d71eae6    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                magical_cannon                                                                                 
+83c108a3b72c   0a31c16014a1    &#34;python3 main.py&#34;        3 weeks ago    Exited (0) 3 weeks ago                fervent_goldstine 
 </code></pre><p>Run the command to remove the &ldquo;stale&rdquo; containers</p>
-<pre tabindex="0"><code>&gt; git:(main) docker rm `docker ps -a -q -f &quot;status=exited&quot;`
+<pre tabindex="0"><code>&gt; git:(main) docker rm `docker ps -a -q -f &#34;status=exited&#34;`
 5eca36be7c12
 e1093949e6cb
 8a0f435c8a5d
@@ -242,7 +243,7 @@ f03a192b7863
 </code></pre><p>And now, when you list the containers, you&rsquo;ll notice that the exited ones are cleaned up!</p>
 <pre tabindex="0"><code>&gt; git:(main) docker ps -a
 CONTAINER ID   IMAGE          COMMAND         CREATED       STATUS    PORTS     NAMES
-e09de0c5d5a8   fcfdcd822485   &quot;--name gnms&quot;   3 weeks ago   Created             dreamy_ramanujan
+e09de0c5d5a8   fcfdcd822485   &#34;--name gnms&#34;   3 weeks ago   Created             dreamy_ramanujan
 </code></pre>
       </div>
 
@@ -254,6 +255,28 @@ e09de0c5d5a8   fcfdcd822485   &quot;--name gnms&quot;   3 weeks ago   Created   
   
     
     
+    
+      <h3 id="see-also-in-docker">
+        See also in Docker
+        <a class="heading-link" href="#see-also-in-docker">
+          <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+          <span class="sr-only">Link to heading</span>
+        </a>
+      </h3>
+      <nav>
+        <ul>
+        
+        
+          
+        
+          
+            <li>
+              <a href="/posts/init-system-for-docker-containers/">Improved init for Docker containers</a>
+            </li>
+          
+        
+        </ul>
+      </nav>
     
   
 </section>
@@ -291,7 +314,7 @@ e09de0c5d5a8   fcfdcd822485   &quot;--name gnms&quot;   3 weeks ago   Created   
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

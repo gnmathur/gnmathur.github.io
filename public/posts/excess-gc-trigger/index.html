@@ -32,6 +32,7 @@
 
 
 
+
 <link rel="canonical" href="https://www.acchi.life/posts/excess-gc-trigger/">
 
 
@@ -193,108 +194,108 @@ of doing that. It defines a <code>GCAnalyzer</code> class that takes the followi
 consecutive STW (Stop-The-World) cycles, or consecutive full GC cycles.</p>
 <p>It works by keeping track of the GC times in the last <code>trackedCycles</code> cycles, and the total time spent from the start of the first cycle, to the
 end of the last one.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
-<span style="color:#fff;font-weight:bold">import</span> com.sun.management.GarbageCollectionNotificationInfo;
-
-<span style="color:#fff;font-weight:bold">import</span> javax.management.Notification;
-<span style="color:#fff;font-weight:bold">import</span> javax.management.NotificationEmitter;
-<span style="color:#fff;font-weight:bold">import</span> javax.management.openmbean.CompositeData;
-<span style="color:#fff;font-weight:bold">import</span> java.lang.management.GarbageCollectorMXBean;
-<span style="color:#fff;font-weight:bold">import</span> java.lang.management.ManagementFactory;
-<span style="color:#fff;font-weight:bold">import</span> java.util.LinkedList;
-<span style="color:#fff;font-weight:bold">import</span> java.util.List;
-<span style="color:#fff;font-weight:bold">import</span> java.util.function.Consumer;
-
-<span style="color:#007f7f">/**
-</span><span style="color:#007f7f"> * GCAnalyzer monitors garbage collection activities and invokes a callback function
-</span><span style="color:#007f7f"> * when the percentage of time spent in garbage collection, over a specified number
-</span><span style="color:#007f7f"> * of consecutive cycles exceeds a given threshold.
-</span><span style="color:#007f7f"> */</span>
-<span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">class</span> GCAnalyzer {
-    <span style="color:#fff;font-weight:bold">private</span> List&lt;GarbageCollectorMXBean&gt; gcBeans;
-    <span style="color:#fff;font-weight:bold">private</span> LinkedList&lt;Long&gt; durations = <span style="color:#fff;font-weight:bold">new</span> LinkedList&lt;&gt;();
-    <span style="color:#fff;font-weight:bold">private</span> LinkedList&lt;Long&gt; startTimes = <span style="color:#fff;font-weight:bold">new</span> LinkedList&lt;&gt;();
-    <span style="color:#007f7f">// Number of consecutive GC cycles to keep track of
-</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">int</span> trackedCycles = 0;
-    <span style="color:#007f7f">// Percentage of time spent in GC over the  cycles to trigger the callback function
-</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">double</span> percentThreshold = 0.<span style="color:#007f7f">0</span>;
-    <span style="color:#007f7f">// Callback function to call when the percentage threshold is exceeded
-</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">private</span> Consumer&lt;Double&gt; thresholdExceededCb;
-
-    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">final</span> <span style="color:#fff;font-weight:bold">class</span> GCNotificationListener <span style="color:#fff;font-weight:bold">implements</span> javax.<span style="color:#007f7f">management</span>.<span style="color:#007f7f">NotificationListener</span> {
-        <span style="color:#007f7f">/**
-</span><span style="color:#007f7f">         * Calculates the percentage of time spent in garbage collection relative to total elapsed time.
-</span><span style="color:#007f7f">         *
-</span><span style="color:#007f7f">         * @param currentEndTime The end time of the current GC cycle.
-</span><span style="color:#007f7f">         * @return The percentage of time spent in GC.
-</span><span style="color:#007f7f">         */</span>
-        <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">double</span> calculateGcPercent(<span style="color:#fff;font-weight:bold">long</span> currentEndTime) {
-            <span style="color:#fff;font-weight:bold">long</span> totalDuration = durations.<span style="color:#007f7f">stream</span>().<span style="color:#007f7f">mapToLong</span>(Long::longValue).<span style="color:#007f7f">sum</span>();
-            <span style="color:#fff;font-weight:bold">return</span> (<span style="color:#fff;font-weight:bold">double</span>) totalDuration / (currentEndTime - startTimes.<span style="color:#007f7f">getFirst</span>()) * 100.<span style="color:#007f7f">0</span>;
-        }
-
-        @Override
-        <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">void</span> handleNotification(Notification notification, Object handback) {
-            <span style="color:#fff;font-weight:bold">if</span> (notification.<span style="color:#007f7f">getType</span>().<span style="color:#007f7f">equals</span>(GarbageCollectionNotificationInfo.<span style="color:#007f7f">GARBAGE_COLLECTION_NOTIFICATION</span>)) {
-                GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.<span style="color:#007f7f">from</span>((CompositeData) notification.<span style="color:#007f7f">getUserData</span>());
-                <span style="color:#fff;font-weight:bold">long</span> duration = info.<span style="color:#007f7f">getGcInfo</span>().<span style="color:#007f7f">getDuration</span>();
-                <span style="color:#fff;font-weight:bold">long</span> startTime = info.<span style="color:#007f7f">getGcInfo</span>().<span style="color:#007f7f">getStartTime</span>();
-                <span style="color:#fff;font-weight:bold">long</span> endTime = info.<span style="color:#007f7f">getGcInfo</span>().<span style="color:#007f7f">getEndTime</span>();
-
-                <span style="color:#fff;font-weight:bold">if</span> (durations.<span style="color:#007f7f">size</span>() == trackedCycles) {
-                    <span style="color:#fff;font-weight:bold">double</span> percent = calculateGcPercent(endTime);
-                    <span style="color:#fff;font-weight:bold">if</span> (percent &gt; percentThreshold) {
-                        thresholdExceededCb.<span style="color:#007f7f">accept</span>(percent);
-                    }
-
-                    durations.<span style="color:#007f7f">removeFirst</span>();
-                    startTimes.<span style="color:#007f7f">removeFirst</span>();
-                }
-
-                durations.<span style="color:#007f7f">add</span>(duration);
-                startTimes.<span style="color:#007f7f">add</span>(startTime);
-            }
-        }
-    }
-
-    <span style="color:#007f7f">/**
-</span><span style="color:#007f7f">     * Registers the GCNotificationListener to all available GarbageCollectorMXBeans.
-</span><span style="color:#007f7f">     */</span>
-    <span style="color:#fff;font-weight:bold">private</span> <span style="color:#fff;font-weight:bold">void</span> registerGCNotificationListeners() {
-        <span style="color:#fff;font-weight:bold">for</span> (GarbageCollectorMXBean bean : gcBeans) {
-            <span style="color:#fff;font-weight:bold">if</span> (bean <span style="color:#fff;font-weight:bold">instanceof</span> NotificationEmitter) {
-                NotificationEmitter emitter = (NotificationEmitter) bean;
-                emitter.<span style="color:#007f7f">addNotificationListener</span>(<span style="color:#fff;font-weight:bold">new</span> GCNotificationListener(), <span style="color:#fff;font-weight:bold">null</span>, <span style="color:#fff;font-weight:bold">null</span>);
-            }
-        }
-    }
-
-    <span style="color:#007f7f">/**
-</span><span style="color:#007f7f">     * Constructs a GCAnalyzer instance.
-</span><span style="color:#007f7f">     *
-</span><span style="color:#007f7f">     * @param trackedCycles The number of consecutive GC cycles to monitor.
-</span><span style="color:#007f7f">     * @param percentThreshold The threshold of GC activity as a percentage of total time.
-</span><span style="color:#007f7f">     * @param thresholdExceededCb A callback function to invoke when the threshold is exceeded.
-</span><span style="color:#007f7f">     */</span>
-    <span style="color:#fff;font-weight:bold">public</span> GCAnalyzer(<span style="color:#fff;font-weight:bold">int</span> trackedCycles, <span style="color:#fff;font-weight:bold">double</span> percentThreshold, Consumer&lt;Double&gt; thresholdExceededCb) {
-        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">gcBeans</span> = ManagementFactory.<span style="color:#007f7f">getGarbageCollectorMXBeans</span>();
-        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">trackedCycles</span> = trackedCycles;
-        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">percentThreshold</span> = percentThreshold;
-        <span style="color:#fff;font-weight:bold">this</span>.<span style="color:#007f7f">thresholdExceededCb</span> = thresholdExceededCb;
-
-        registerGCNotificationListeners();
-    }
-}
-</code></pre></div><p>It could be called from main like this -</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">   <span style="color:#fff;font-weight:bold">public</span> <span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span> main(String[] args) {
-       ...
-        <span style="color:#fff;font-weight:bold">new</span> GCAnalyzer(6,
-            70,
-            timeSpentInGcInPercent -&gt; System.<span style="color:#007f7f">out</span>.<span style="color:#007f7f">printf</span>(<span style="color:#0ff;font-weight:bold">&#34;GC Threshold exceeded: %.2f\n&#34;</span>, timeSpentInGcInPercent)
-        );
-       ...
-   }
-</code></pre></div><p>In the example above, the registered callback, which prints out the threshold exceeded message, is called when the program spends more than 70% of clock
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">com.sun.management.GarbageCollectionNotificationInfo</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">javax.management.Notification</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">javax.management.NotificationEmitter</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">javax.management.openmbean.CompositeData</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">java.lang.management.GarbageCollectorMXBean</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">java.lang.management.ManagementFactory</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">java.util.LinkedList</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">java.util.List</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">import</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">java.util.function.Consumer</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * GCAnalyzer monitors garbage collection activities and invokes a callback function
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * when the percentage of time spent in garbage collection, over a specified number
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * of consecutive cycles exceeds a given threshold.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">GCAnalyzer</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span>List<span style="color:#ff7b72;font-weight:bold">&lt;</span>GarbageCollectorMXBean<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>gcBeans;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span>LinkedList<span style="color:#ff7b72;font-weight:bold">&lt;</span>Long<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>durations<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">new</span><span style="color:#6e7681"> </span>LinkedList<span style="color:#ff7b72;font-weight:bold">&lt;&gt;</span>();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span>LinkedList<span style="color:#ff7b72;font-weight:bold">&lt;</span>Long<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>startTimes<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">new</span><span style="color:#6e7681"> </span>LinkedList<span style="color:#ff7b72;font-weight:bold">&lt;&gt;</span>();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// Number of consecutive GC cycles to keep track of</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">int</span><span style="color:#6e7681"> </span>trackedCycles<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>0;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// Percentage of time spent in GC over the  cycles to trigger the callback function</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">double</span><span style="color:#6e7681"> </span>percentThreshold<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>0.0;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// Callback function to call when the percentage threshold is exceeded</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span>Consumer<span style="color:#ff7b72;font-weight:bold">&lt;</span>Double<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>thresholdExceededCb;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">final</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">GCNotificationListener</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">implements</span><span style="color:#6e7681"> </span>javax.management.NotificationListener<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#8b949e;font-style:italic">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">         * Calculates the percentage of time spent in garbage collection relative to total elapsed time.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">         *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">         * @param currentEndTime The end time of the current GC cycle.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">         * @return The percentage of time spent in GC.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">         */</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">double</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">calculateGcPercent</span>(<span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span>currentEndTime)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span>totalDuration<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>durations.stream().mapToLong(Long::longValue).sum();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">return</span><span style="color:#6e7681"> </span>(<span style="color:#ff7b72">double</span>)<span style="color:#6e7681"> </span>totalDuration<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#6e7681"> </span>(currentEndTime<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#6e7681"> </span>startTimes.getFirst())<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#6e7681"> </span>100.0;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#d2a8ff;font-weight:bold">@Override</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">void</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">handleNotification</span>(Notification<span style="color:#6e7681"> </span>notification,<span style="color:#6e7681"> </span>Object<span style="color:#6e7681"> </span>handback)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span>(notification.getType().equals(GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION))<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>GarbageCollectionNotificationInfo<span style="color:#6e7681"> </span>info<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>GarbageCollectionNotificationInfo.from((CompositeData)<span style="color:#6e7681"> </span>notification.getUserData());<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span>duration<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>info.getGcInfo().getDuration();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span>startTime<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>info.getGcInfo().getStartTime();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span><span style="color:#ff7b72">long</span><span style="color:#6e7681"> </span>endTime<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>info.getGcInfo().getEndTime();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span>(durations.size()<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">==</span><span style="color:#6e7681"> </span>trackedCycles)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                    </span><span style="color:#ff7b72">double</span><span style="color:#6e7681"> </span>percent<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>calculateGcPercent(endTime);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                    </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span>(percent<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>percentThreshold)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                        </span>thresholdExceededCb.accept(percent);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                    </span>durations.removeFirst();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                    </span>startTimes.removeFirst();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>durations.add(duration);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>startTimes.add(startTime);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * Registers the GCNotificationListener to all available GarbageCollectorMXBeans.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     */</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">private</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">void</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">registerGCNotificationListeners</span>()<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">for</span><span style="color:#6e7681"> </span>(GarbageCollectorMXBean<span style="color:#6e7681"> </span>bean<span style="color:#6e7681"> </span>:<span style="color:#6e7681"> </span>gcBeans)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span>(bean<span style="color:#6e7681"> </span><span style="color:#ff7b72">instanceof</span><span style="color:#6e7681"> </span>NotificationEmitter)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>NotificationEmitter<span style="color:#6e7681"> </span>emitter<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>(NotificationEmitter)<span style="color:#6e7681"> </span>bean;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>emitter.addNotificationListener(<span style="color:#ff7b72">new</span><span style="color:#6e7681"> </span>GCNotificationListener(),<span style="color:#6e7681"> </span><span style="color:#79c0ff">null</span>,<span style="color:#6e7681"> </span><span style="color:#79c0ff">null</span>);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * Constructs a GCAnalyzer instance.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * @param trackedCycles The number of consecutive GC cycles to monitor.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * @param percentThreshold The threshold of GC activity as a percentage of total time.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * @param thresholdExceededCb A callback function to invoke when the threshold is exceeded.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     */</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">GCAnalyzer</span>(<span style="color:#ff7b72">int</span><span style="color:#6e7681"> </span>trackedCycles,<span style="color:#6e7681"> </span><span style="color:#ff7b72">double</span><span style="color:#6e7681"> </span>percentThreshold,<span style="color:#6e7681"> </span>Consumer<span style="color:#ff7b72;font-weight:bold">&lt;</span>Double<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>thresholdExceededCb)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">this</span>.gcBeans<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>ManagementFactory.getGarbageCollectorMXBeans();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">this</span>.trackedCycles<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>trackedCycles;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">this</span>.percentThreshold<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>percentThreshold;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">this</span>.thresholdExceededCb<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>thresholdExceededCb;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>registerGCNotificationListeners();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>It could be called from main like this -</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6e7681">   </span><span style="color:#ff7b72">public</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">static</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">void</span><span style="color:#6e7681"> </span><span style="color:#d2a8ff;font-weight:bold">main</span>(String<span style="color:#ff7b72;font-weight:bold">[]</span><span style="color:#6e7681"> </span>args)<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">       </span>...<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">new</span><span style="color:#6e7681"> </span>GCAnalyzer(6,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>70,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>timeSpentInGcInPercent<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#6e7681"> </span>System.out.printf(<span style="color:#a5d6ff">&#34;GC Threshold exceeded: %.2f\n&#34;</span>,<span style="color:#6e7681"> </span>timeSpentInGcInPercent)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">       </span>...<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">   </span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>In the example above, the registered callback, which prints out the threshold exceeded message, is called when the program spends more than 70% of clock
 time in GC activity over the 6 previous GC cycles. Note, the the <code>GCAnalyzer</code> implementation is agnostic of the GC type. The program could be easily modified
 to filter on specific GC type (e.g. only <code>G1 Young Gen</code> etc.)</p>
       </div>
@@ -366,7 +367,7 @@ to filter on specific GC type (e.g. only <code>G1 Young Gen</code> etc.)</p>
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   
